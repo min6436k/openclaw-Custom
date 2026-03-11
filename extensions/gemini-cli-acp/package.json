@@ -1,0 +1,25 @@
+{
+  "name": "@openclaw/gemini-cli-acp",
+  "version": "2026.3.8-beta.1",
+  "private": true,
+  "description": "OpenClaw Gemini CLI ACP runtime plugin",
+  "type": "module",
+  "peerDependencies": {
+    "openclaw": ">=2026.3.2"
+  },
+  "peerDependenciesMeta": {
+    "openclaw": {
+      "optional": true
+    }
+  },
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "install": {
+      "npmSpec": "@openclaw/gemini-cli-acp",
+      "localPath": "extensions/gemini-cli-acp",
+      "defaultChoice": "npm"
+    }
+  }
+}

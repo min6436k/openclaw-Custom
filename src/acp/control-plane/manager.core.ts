@@ -222,7 +222,10 @@ export class AcpSessionManager {
     return await this.withSessionActor(sessionKey, async () => {
       const backend = this.deps.requireRuntimeBackend(input.backendId || input.cfg.acp?.backend);
       const runtime = backend.runtime;
-      const initialRuntimeOptions = validateRuntimeOptionPatch({ cwd: input.cwd });
+      const initialRuntimeOptions = validateRuntimeOptionPatch({
+        cwd: input.cwd,
+        model: input.model,
+      });
       const requestedCwd = initialRuntimeOptions.cwd;
       this.enforceConcurrentSessionLimit({
         cfg: input.cfg,
@@ -235,6 +238,7 @@ export class AcpSessionManager {
             agent,
             mode: input.mode,
             cwd: requestedCwd,
+            model: initialRuntimeOptions.model,
           }),
         fallbackCode: "ACP_SESSION_INIT_FAILED",
         fallbackMessage: "Could not initialize ACP session runtime.",
@@ -657,6 +661,10 @@ export class AcpSessionManager {
           text: input.text,
           mode: input.mode,
           requestId: input.requestId,
+          turnSourceChannel: input.turnSourceChannel,
+          turnSourceTo: input.turnSourceTo,
+          turnSourceAccountId: input.turnSourceAccountId,
+          turnSourceThreadId: input.turnSourceThreadId,
           signal: combinedSignal,
         })) {
           if (event.type === "error") {
@@ -929,6 +937,7 @@ export class AcpSessionManager {
           agent,
           mode,
           cwd,
+          model: runtimeOptions.model,
         }),
       fallbackCode: "ACP_SESSION_INIT_FAILED",
       fallbackMessage: "Could not initialize ACP session runtime.",

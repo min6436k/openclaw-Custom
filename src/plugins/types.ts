@@ -232,6 +232,7 @@ export type OpenClawPluginServiceContext = {
   workspaceDir?: string;
   stateDir: string;
   logger: PluginLogger;
+  runtime?: PluginRuntime;
 };
 
 export type OpenClawPluginService = {

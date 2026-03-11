@@ -21,6 +21,7 @@ import {
 import { loadInternalHooks } from "../hooks/loader.js";
 import { isTruthyEnvValue } from "../infra/env.js";
 import type { loadOpenClawPlugins } from "../plugins/loader.js";
+import { createPluginRuntime } from "../plugins/runtime/index.js";
 import { type PluginServicesHandle, startPluginServices } from "../plugins/services.js";
 import { startBrowserControlServerIfEnabled } from "./server-browser.js";
 import {
@@ -152,10 +153,12 @@ export async function startGatewaySidecars(params: {
 
   let pluginServices: PluginServicesHandle | null = null;
   try {
+    const pluginRuntime = createPluginRuntime();
     pluginServices = await startPluginServices({
       registry: params.pluginRegistry,
       config: params.cfg,
       workspaceDir: params.defaultWorkspaceDir,
+      runtime: pluginRuntime,
     });
   } catch (err) {
     params.log.warn(`plugin services failed to start: ${String(err)}`);

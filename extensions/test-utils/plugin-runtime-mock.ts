@@ -253,6 +253,9 @@ export function createPluginRuntimeMock(overrides: DeepPartial<PluginRuntime> = 
     state: {
       resolveStateDir: vi.fn(() => "/tmp/openclaw"),
     },
+    gateway: {
+      request: vi.fn(),
+    },
     subagent: {
       run: vi.fn(),
       waitForRun: vi.fn(),

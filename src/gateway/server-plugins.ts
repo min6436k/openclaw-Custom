@@ -64,7 +64,7 @@ function createSyntheticOperatorClient(): GatewayRequestOptions["client"] {
   };
 }
 
-async function dispatchGatewayMethod<T>(
+export async function dispatchGatewayMethod<T>(
   method: string,
   params: Record<string, unknown>,
 ): Promise<T> {
@@ -102,6 +102,12 @@ async function dispatchGatewayMethod<T>(
     throw new Error(result.error?.message ?? `Gateway method "${method}" failed.`);
   }
   return result.payload as T;
+}
+
+function createGatewayRuntime(): PluginRuntime["gateway"] {
+  return {
+    request: async ({ method, params }) => await dispatchGatewayMethod(method, params ?? {}),
+  };
 }
 
 function createGatewaySubagentRuntime(): PluginRuntime["subagent"] {
@@ -184,6 +190,7 @@ export function loadGatewayPlugins(params: {
     },
     coreGatewayHandlers: params.coreGatewayHandlers,
     runtimeOptions: {
+      gateway: createGatewayRuntime(),
       subagent: createGatewaySubagentRuntime(),
     },
   });

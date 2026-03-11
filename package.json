@@ -108,6 +108,10 @@
       "types": "./dist/plugin-sdk/feishu.d.ts",
       "default": "./dist/plugin-sdk/feishu.js"
     },
+    "./plugin-sdk/gemini-cli-acp": {
+      "types": "./dist/plugin-sdk/gemini-cli-acp.d.ts",
+      "default": "./dist/plugin-sdk/gemini-cli-acp.js"
+    },
     "./plugin-sdk/google-gemini-cli-auth": {
       "types": "./dist/plugin-sdk/google-gemini-cli-auth.d.ts",
       "default": "./dist/plugin-sdk/google-gemini-cli-auth.js"

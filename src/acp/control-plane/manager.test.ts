@@ -420,6 +420,39 @@ describe("AcpSessionManager", () => {
     expect(runtimeState.ensureSession).toHaveBeenCalledTimes(1);
   });
 
+  it("seeds requested model into new ACP session initialization", async () => {
+    const runtimeState = createRuntime();
+    hoisted.requireAcpRuntimeBackendMock.mockReturnValue({
+      id: "acpx",
+      runtime: runtimeState.runtime,
+    });
+    hoisted.upsertAcpSessionMetaMock.mockResolvedValue({
+      sessionKey: "agent:codex:acp:model-seed",
+      storeSessionKey: "agent:codex:acp:model-seed",
+      acp: readySessionMeta(),
+    });
+
+    const manager = new AcpSessionManager();
+    await manager.initializeSession({
+      cfg: baseCfg,
+      sessionKey: "agent:codex:acp:model-seed",
+      agent: "codex",
+      mode: "persistent",
+      model: "google/gemini-3-pro-preview",
+    });
+
+    expect(runtimeState.ensureSession).toHaveBeenCalledWith(
+      expect.objectContaining({
+        model: "google/gemini-3-pro-preview",
+      }),
+    );
+    expect(extractRuntimeOptionsFromUpserts()).toContainEqual(
+      expect.objectContaining({
+        model: "google/gemini-3-pro-preview",
+      }),
+    );
+  });
+
   it("drops cached runtime handles when close tolerates backend-unavailable errors", async () => {
     const runtimeState = createRuntime();
     runtimeState.close.mockRejectedValueOnce(

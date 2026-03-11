@@ -41,7 +41,18 @@ function createUnavailableSubagentRuntime(): PluginRuntime["subagent"] {
   };
 }
 
+function createUnavailableGatewayRuntime(): PluginRuntime["gateway"] {
+  return {
+    request: async () => {
+      throw new Error(
+        "Plugin runtime gateway methods are only available during gateway startup/runtime.",
+      );
+    },
+  };
+}
+
 export type CreatePluginRuntimeOptions = {
+  gateway?: PluginRuntime["gateway"];
   subagent?: PluginRuntime["subagent"];
 };
 
@@ -49,6 +60,7 @@ export function createPluginRuntime(_options: CreatePluginRuntimeOptions = {}): 
   const runtime = {
     version: resolveVersion(),
     config: createRuntimeConfig(),
+    gateway: _options.gateway ?? createUnavailableGatewayRuntime(),
     subagent: _options.subagent ?? createUnavailableSubagentRuntime(),
     system: createRuntimeSystem(),
     media: createRuntimeMedia(),

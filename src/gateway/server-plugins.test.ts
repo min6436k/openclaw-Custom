@@ -74,6 +74,30 @@ function createSubagentRuntime(serverPlugins: ServerPluginsModule): PluginRuntim
   return call.runtimeOptions.subagent;
 }
 
+function createGatewayRuntime(serverPlugins: ServerPluginsModule): PluginRuntime["gateway"] {
+  const log = {
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+  };
+  loadOpenClawPlugins.mockReturnValue(createRegistry([]));
+  serverPlugins.loadGatewayPlugins({
+    cfg: {},
+    workspaceDir: "/tmp",
+    log,
+    coreGatewayHandlers: {},
+    baseMethods: [],
+  });
+  const call = loadOpenClawPlugins.mock.calls.at(-1)?.[0] as
+    | { runtimeOptions?: { gateway?: PluginRuntime["gateway"] } }
+    | undefined;
+  if (!call?.runtimeOptions?.gateway) {
+    throw new Error("Expected loadGatewayPlugins to provide gateway runtime");
+  }
+  return call.runtimeOptions.gateway;
+}
+
 beforeEach(() => {
   loadOpenClawPlugins.mockReset();
   handleGatewayRequest.mockReset();
@@ -208,5 +232,27 @@ describe("loadGatewayPlugins", () => {
       | (GatewayRequestContext & { marker: string })
       | undefined;
     expect(dispatched?.marker).toBe("after-mutation");
+  });
+
+  test("provides gateway runtime requests that reuse gateway dispatch", async () => {
+    const serverPlugins = await importServerPluginsModule();
+    const runtime = createGatewayRuntime(serverPlugins);
+    const context = createTestContext("gateway-runtime");
+    serverPlugins.setFallbackGatewayContext(context);
+
+    await runtime.request({
+      method: "exec.approval.waitDecision",
+      params: { id: "approval-1" },
+    });
+
+    expect(handleGatewayRequest).toHaveBeenCalledWith(
+      expect.objectContaining({
+        req: expect.objectContaining({
+          method: "exec.approval.waitDecision",
+          params: { id: "approval-1" },
+        }),
+        context,
+      }),
+    );
   });
 });

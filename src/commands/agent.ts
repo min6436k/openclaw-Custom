@@ -760,6 +760,10 @@ async function agentCommandInternal(
           text: body,
           mode: "prompt",
           requestId: runId,
+          turnSourceChannel: opts.replyChannel ?? opts.channel ?? sessionEntry?.lastChannel,
+          turnSourceTo: opts.replyTo ?? sessionEntry?.lastTo,
+          turnSourceAccountId: opts.replyAccountId ?? opts.accountId ?? sessionEntry?.lastAccountId,
+          turnSourceThreadId: opts.threadId ?? sessionEntry?.lastThreadId,
           signal: opts.abortSignal,
           onEvent: (event) => {
             if (event.type === "done") {

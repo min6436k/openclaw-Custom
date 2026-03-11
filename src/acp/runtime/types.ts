@@ -36,6 +36,7 @@ export type AcpRuntimeEnsureInput = {
   agent: string;
   mode: AcpRuntimeSessionMode;
   cwd?: string;
+  model?: string;
   env?: Record<string, string>;
 };
 
@@ -44,6 +45,10 @@ export type AcpRuntimeTurnInput = {
   text: string;
   mode: AcpRuntimePromptMode;
   requestId: string;
+  turnSourceChannel?: string;
+  turnSourceTo?: string;
+  turnSourceAccountId?: string;
+  turnSourceThreadId?: string | number;
   signal?: AbortSignal;
 };
 
@@ -88,6 +93,7 @@ export type AcpRuntimeEvent =
       tag?: AcpSessionUpdateTag;
       used?: number;
       size?: number;
+      details?: Record<string, unknown>;
     }
   | {
       type: "tool_call";

@@ -44,6 +44,7 @@ export type AcpInitializeSessionInput = {
   agent: string;
   mode: AcpRuntimeSessionMode;
   cwd?: string;
+  model?: string;
   backendId?: string;
 };
 
@@ -53,6 +54,10 @@ export type AcpRunTurnInput = {
   text: string;
   mode: AcpRuntimePromptMode;
   requestId: string;
+  turnSourceChannel?: string;
+  turnSourceTo?: string;
+  turnSourceAccountId?: string;
+  turnSourceThreadId?: string | number;
   signal?: AbortSignal;
   onEvent?: (event: AcpRuntimeEvent) => Promise<void> | void;
 };

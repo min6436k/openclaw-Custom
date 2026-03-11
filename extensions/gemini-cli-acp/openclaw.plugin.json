@@ -1,0 +1,45 @@
+{
+  "id": "gemini-cli-acp",
+  "name": "Gemini CLI ACP Runtime",
+  "description": "ACP runtime backend powered by Gemini CLI over stdio JSON-RPC.",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "command": {
+        "type": "string"
+      },
+      "cwd": {
+        "type": "string"
+      },
+      "model": {
+        "type": "string"
+      },
+      "env": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "uiHints": {
+    "command": {
+      "label": "Gemini CLI Command",
+      "help": "Command or path used to launch Gemini CLI ACP."
+    },
+    "cwd": {
+      "label": "Default Working Directory",
+      "help": "Default working directory for Gemini ACP sessions."
+    },
+    "model": {
+      "label": "Default Model",
+      "help": "Model configured after Gemini ACP session creation."
+    },
+    "env": {
+      "label": "Environment Overrides",
+      "help": "Optional environment variables passed to the Gemini ACP subprocess.",
+      "advanced": true
+    }
+  }
+}

@@ -2,6 +2,7 @@ import type { OpenClawConfig } from "../config/config.js";
 import { STATE_DIR } from "../config/paths.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import type { PluginRegistry } from "./registry.js";
+import type { PluginRuntime } from "./runtime/types.js";
 import type { OpenClawPluginServiceContext, PluginLogger } from "./types.js";
 
 const log = createSubsystemLogger("plugins");
@@ -18,12 +19,14 @@ function createPluginLogger(): PluginLogger {
 function createServiceContext(params: {
   config: OpenClawConfig;
   workspaceDir?: string;
+  runtime?: PluginRuntime;
 }): OpenClawPluginServiceContext {
   return {
     config: params.config,
     workspaceDir: params.workspaceDir,
     stateDir: STATE_DIR,
     logger: createPluginLogger(),
+    runtime: params.runtime,
   };
 }
 
@@ -35,6 +38,7 @@ export async function startPluginServices(params: {
   registry: PluginRegistry;
   config: OpenClawConfig;
   workspaceDir?: string;
+  runtime?: PluginRuntime;
 }): Promise<PluginServicesHandle> {
   const running: Array<{
     id: string;
@@ -43,6 +47,7 @@ export async function startPluginServices(params: {
   const serviceContext = createServiceContext({
     config: params.config,
     workspaceDir: params.workspaceDir,
+    runtime: params.runtime,
   });
 
   for (const entry of params.registry.services) {

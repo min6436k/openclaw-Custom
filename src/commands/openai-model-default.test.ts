@@ -140,6 +140,10 @@ describe("applyDefaultModelChoice", () => {
 });
 
 describe("shared default model behavior", () => {
+  it("uses Gemini Flash as the shared Google Gemini default", () => {
+    expect(GOOGLE_GEMINI_DEFAULT_MODEL).toBe("google/gemini-3-flash-preview");
+  });
+
   it("sets defaults when model is unset", () => {
     for (const testCase of SHARED_DEFAULT_MODEL_CASES) {
       const cfg: OpenClawConfig = { agents: { defaults: {} } };

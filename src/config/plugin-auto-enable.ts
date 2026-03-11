@@ -15,6 +15,7 @@ import {
 import { isRecord } from "../utils.js";
 import { hasAnyWhatsAppAuth } from "../web/accounts.js";
 import type { OpenClawConfig } from "./config.js";
+import { resolveAcpBackendPluginId } from "./plugin-auto-enable-acp.js";
 import { ensurePluginAllowlisted } from "./plugins-allowlist.js";
 
 type PluginEnableChange = {
@@ -357,10 +358,11 @@ function resolveConfiguredPlugins(
   const backendRaw =
     typeof cfg.acp?.backend === "string" ? cfg.acp.backend.trim().toLowerCase() : "";
   const acpConfigured =
-    cfg.acp?.enabled === true || cfg.acp?.dispatch?.enabled === true || backendRaw === "acpx";
-  if (acpConfigured && (!backendRaw || backendRaw === "acpx")) {
+    cfg.acp?.enabled === true || cfg.acp?.dispatch?.enabled === true || !!backendRaw;
+  const acpPluginId = resolveAcpBackendPluginId(backendRaw || "acpx");
+  if (acpConfigured && acpPluginId) {
     changes.push({
-      pluginId: "acpx",
+      pluginId: acpPluginId,
       reason: "ACP runtime configured",
     });
   }

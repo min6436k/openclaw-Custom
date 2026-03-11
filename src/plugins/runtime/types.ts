@@ -48,7 +48,15 @@ export type SubagentDeleteSessionParams = {
   deleteTranscript?: boolean;
 };
 
+export type PluginRuntimeGatewayRequestParams = {
+  method: string;
+  params?: Record<string, unknown>;
+};
+
 export type PluginRuntime = PluginRuntimeCore & {
+  gateway: {
+    request: <TResult = unknown>(params: PluginRuntimeGatewayRequestParams) => Promise<TResult>;
+  };
   subagent: {
     run: (params: SubagentRunParams) => Promise<SubagentRunResult>;
     waitForRun: (params: SubagentWaitParams) => Promise<SubagentWaitResult>;

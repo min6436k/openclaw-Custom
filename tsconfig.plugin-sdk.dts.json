@@ -31,6 +31,7 @@
     "src/plugin-sdk/diagnostics-otel.ts",
     "src/plugin-sdk/diffs.ts",
     "src/plugin-sdk/feishu.ts",
+    "src/plugin-sdk/gemini-cli-acp.ts",
     "src/plugin-sdk/google-gemini-cli-auth.ts",
     "src/plugin-sdk/googlechat.ts",
     "src/plugin-sdk/irc.ts",

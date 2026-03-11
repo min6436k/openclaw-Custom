@@ -59,6 +59,7 @@ const pluginSdkEntrypoints = [
   "diagnostics-otel",
   "diffs",
   "feishu",
+  "gemini-cli-acp",
   "google-gemini-cli-auth",
   "googlechat",
   "irc",
