@@ -268,6 +268,32 @@ describe("sanitizeSessionMessagesImages", () => {
     expect(out[1]?.role).toBe("assistant");
     expect(out[2]?.role).toBe("assistant");
   });
+  it("drops trailing empty assistant error messages after tool results in images-only mode", async () => {
+    const input = castAgentMessages([
+      makeOpenAiResponsesAssistantMessage([
+        { type: "toolCall", id: "call_1", name: "read", arguments: {} },
+      ]),
+      {
+        role: "toolResult",
+        toolCallId: "call_1",
+        toolName: "read",
+        content: [{ type: "text", text: "ok" }],
+        isError: false,
+        timestamp: nextTimestamp(),
+      },
+      {
+        ...makeEmptyAssistantErrorMessage(),
+      },
+    ]);
+
+    const out = await sanitizeSessionMessagesImages(input, "test", {
+      sanitizeMode: "images-only",
+    });
+
+    expect(out).toHaveLength(2);
+    expect(out[0]?.role).toBe("assistant");
+    expect(out[1]?.role).toBe("toolResult");
+  });
   it("leaves non-assistant messages unchanged", async () => {
     const input = [
       { role: "user", content: "hello", timestamp: nextTimestamp() } satisfies UserMessage,

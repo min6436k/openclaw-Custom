@@ -104,6 +104,9 @@ export async function sanitizeSessionMessagesImages(
             label,
             imageSanitization,
           )) as unknown as typeof assistantMsg.content;
+          if (nextContent.length === 0) {
+            continue;
+          }
           out.push({ ...assistantMsg, content: nextContent });
         } else {
           out.push(assistantMsg);
